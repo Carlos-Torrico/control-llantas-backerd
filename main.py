@@ -38,7 +38,7 @@ def read_root():
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Profundidad de Cocada (mm)</label>
-                    <input type="step" step="0.1" name="profundidad" required placeholder="Ej. 14.5" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <input type="number" step="0.1" name="profundidad" required placeholder="Ej. 14.5" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
                     Guardar Registro
