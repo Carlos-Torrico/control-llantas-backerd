@@ -63,3 +63,9 @@ def guardar_llanta(unidad: str = Form(...), marcado_fuego: str = Form(...), posi
             "profundidad_mm": profundidad
         }
     }
+import os
+import uvicorn
+
+if _name_ == "_main_":
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
