@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
+import os
+import uvicorn
 
 app = FastAPI(title="Control Llantas Global - Backend")
 
@@ -14,33 +16,31 @@ def read_root():
         <title>Control de Llantas Global</title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body class="bg-slate-100 font-sans p-4">
-        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6 mt-6">
-            <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Control de Llantas Global</h2>
-            <p class="text-sm text-slate-500 mb-6 text-center">Registro de inspección y profundidad de cocada</p>
-            
+    <body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg">
+            <h1 class="text-2xl font-bold text-slate-800 mb-6 text-center">Control de Llantas - Global</h1>
             <form action="/guardar-llanta" method="POST" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700">Placa del Vehículo / Unidad:</label>
-                    <input type="text" name="unidad" required class="mt-1 block w-full rounded-md border border-slate-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Empresa / Cliente</label>
+                    <input type="text" name="empresa" required placeholder="Ej. Transportes del Sur" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
-                
                 <div>
-                    <label class="block text-sm font-medium text-slate-700">Número de Marcado a Fuego:</label>
-                    <input type="text" name="marcado_fuego" required class="mt-1 block w-full rounded-md border border-slate-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Unidad / Placa</label>
+                    <input type="text" name="unidad" required placeholder="Ej. ABC-123" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
-
                 <div>
-                    <label class="block text-sm font-medium text-slate-700">Posición del Eje (Ej: 1 al 10):</label>
-                    <input type="number" name="posicion" required class="mt-1 block w-full rounded-md border border-slate-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Marcado a Fuego</label>
+                    <input type="text" name="marcado_fuego" required placeholder="Ej. F-01" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
-
                 <div>
-                    <label class="block text-sm font-medium text-slate-700">Profundidad de Cocada Actual (mm):</label>
-                    <input type="number" step="0.1" name="profundidad" required class="mt-1 block w-full rounded-md border border-slate-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Posición de Eje</label>
+                    <input type="number" name="posicion" required placeholder="Ej. 2" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
-
-                <button type="submit" class="w-full bg-indigo-600 text-white font-bold p-3 rounded-md hover:bg-indigo-700 transition">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Profundidad de Cocada (mm)</label>
+                    <input type="step" step="0.1" name="profundidad" required placeholder="Ej. 14.5" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
                     Guardar Registro
                 </button>
             </form>
@@ -51,20 +51,24 @@ def read_root():
     return html_content
 
 @app.post("/guardar-llanta")
-def guardar_llanta(unidad: str = Form(...), marcado_fuego: str = Form(...), posicion: int = Form(...), profundidad: float = Form(...)):
-    # Aquí conectaremos con Supabase en el siguiente paso
+def guardar_llanta(
+    empresa: str = Form(...),
+    unidad: str = Form(...), 
+    marcado_fuego: str = Form(...), 
+    posicion: int = Form(...), 
+    profundidad: float = Form(...)
+):
     return {
         "status": "success",
-        "mensaje": f"Llanta {marcado_fuego} de la unidad {unidad} registrada correctamente.",
+        "mensaje": f"Llanta {marcado_fuego} de la empresa {empresa} (Unidad {unidad}) registrada correctamente.",
         "datos": {
+            "empresa": empresa,
             "unidad": unidad,
             "marcado_fuego": marcado_fuego,
             "posicion": posicion,
             "profundidad_mm": profundidad
         }
     }
-import os
-import uvicorn
 
 if _name_ == "_main_":
     port = int(os.environ.get("PORT", 10000))
